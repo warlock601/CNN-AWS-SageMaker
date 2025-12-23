@@ -40,6 +40,6 @@ The neuron collects signals from input channels named dendrites, processes infor
 - If one of the pixel is shifted, the pooled feature map will be the same.
 - Max pooling works by retaining the maximum feature response within a given sample size in a feature map.
 - Stride indicates how many pixels it will be shifting to the right.
-In the image below, it is taking out the maximum from 2 X 2 sub-matrcies of tha original matrix and then it flattens them up.
+In the image below, it is taking out the maximum from 2 X 2 sub-matrices of tha original matrix and then it flattens them up.
 <img width="1140" height="271" alt="image" src="https://github.com/user-attachments/assets/fced95e9-0d09-4e30-ad00-1c5a3167fa82" />
 </br>
