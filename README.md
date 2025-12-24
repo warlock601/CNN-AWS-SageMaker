@@ -43,3 +43,33 @@ The neuron collects signals from input channels named dendrites, processes infor
 In the image below, it is taking out the maximum from 2 X 2 sub-matrices of tha original matrix and then it flattens them up.
 <img width="1140" height="271" alt="image" src="https://github.com/user-attachments/assets/fced95e9-0d09-4e30-ad00-1c5a3167fa82" />
 </br>
+
+
+### How to improve CNNs performance?
+- Improve accuracy by adding more feature detectors/filters or adding a dropout (eg: Instead of using 32, let say we use 64 filters).
+- Dropout refers to dropping out units in a neural network.
+- Neurons develop co-dependency amongst each other during training.
+- Dropout is a regularization technique for reducing overfitting in neural netwroks.
+- It enables training to occur on several architectures of the neural network.
+  <img width="730" height="159" alt="image" src="https://github.com/user-attachments/assets/9c878395-e4fa-42e7-b467-90a00843fa1f" />
+
+
+### Confusion Matrix
+- It is a visual way of accessing the performance of the classifier.
+- In Rows, we put all the prediction coming from my model and in Columns we do the true class.
+- Tue Positives (TP): cases when classifier predicted TRUE (they have the disease) and correct class was TRUE (patient has disease).
+- True Negatives (TN): cases when model predicted False (no disease), and correct class was FALSE (patient do not have disease).
+- False Positives (FP) (Type 1 error): classifier predicted TRUE but correct class was FALSE (patient did not have disease). 
+- Flase Negatives (FN) (Type 2 error): classifier predicted FALSE (patient do not have disease) but they actually do have the disease.
+- False Positive is called Type-1 errror and False Negative is called Type-2 error.
+
+### Key Performance Indicators (KPI)
+- Classification Accurcy = (TP+TN)/(TP+TN+FP+FN)
+- Misclassification rate (Error Rate) = (FP+FN)/(TP+TN+FP+FN)
+- Precision = TP/Total TURE Predictions = TP/(TP+FP) (When model predicted TRUE class, how often was it right?)
+- Recall = TP/Actual TRUE = TP/(TP+FN) (when the class was actually TURE, how often did the classifier get it right?)
+
+
+### LENET Network
+#### LeNet Architecture
+<img width="927" height="312" alt="image" src="https://github.com/user-attachments/assets/d116420e-84cb-4c01-8a25-a457e838595e" />
