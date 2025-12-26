@@ -82,3 +82,26 @@ i = np.random.randint(1, len(X_test))
 plt.imshow(X_test[i])
 print('label = ', y_test[i])
 ```
+
+
+- Import SageMaker/BOTO3 (AWS SDK for Python that allows us to deal with AWS services), Create a session, Define S3 and role.
+```bash
+# Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK) for Python
+# Boto3 allows Python developer to write software that makes use of services like Amazon S3 and Amazon EC2
+
+import sagemaker
+import boto3
+
+# Let's create a Sagemaker session
+sagemaker_session = sagemaker.Session()
+
+# Let's define the S3 bucket and prefix that we want to use in this session
+bucket = 'sagemaker-practical' # bucket named 'sagemaker-practical' was created beforehand
+prefix = 'traffic-sign-classifier' # prefix is the subfolder within the bucket.
+
+# Let's get the execution role for the notebook instance. 
+# This is the IAM role that you created when you created your notebook instance. You pass the role to the training job.
+# Note that AWS Identity and Access Management (IAM) role that Amazon SageMaker can assume to perform tasks on your behalf (for example, reading training results, called model artifacts, from the S3 bucket and writing training results to Amazon S3). 
+role = sagemaker.get_execution_role()
+print(role)
+```
