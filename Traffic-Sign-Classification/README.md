@@ -503,7 +503,7 @@ Billable seconds: 73
 ```
 
 
-- Deploy the Model.
+- Deploy the Model. This will take sometime to deploy the endpoint.
 ```bash
 # Deploying the model
 
@@ -515,6 +515,10 @@ tf_predictor = tf_estimator.deploy(initial_instance_count = 1,
                          instance_type = 'ml.t2.medium',  
                          endpoint_name = tf_endpoint_name)
 ```
+
+This exclamation mark at the end means that the model is now deployed.
+<img width="868" height="122" alt="image" src="https://github.com/user-attachments/assets/6fae3d97-28fb-47b4-9f26-6ac83d584a7c" />
+
 
 - Making predictions for the endpoint.
 ```bash
@@ -546,6 +550,11 @@ predicted_label = prediction.argmax(axis=1)
 print('Predicted labels are: {}'.format(predicted_label))
 
 ```
+
+Output will be something like this: </br>
+
+<img width="603" height="160" alt="image" src="https://github.com/user-attachments/assets/935753f1-5a1c-4eb7-97f0-a5ea1b58a92b" />
+
 
 - Deleting the endpoint.
 ```bash
