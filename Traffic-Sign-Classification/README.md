@@ -310,3 +310,194 @@ if __name__ == '__main__':
         inputs={'inputs': model.input},
         outputs={t.name: t for t in model.outputs})
 ```
+
+
+
+- Then we need to specify the parameters using which TensorFlow will train the job.
+```bash
+from sagemaker.tensorflow import TensorFlow
+
+# To Train a TensorFlow model, we will use TensorFlow estimator from the Sagemaker SDK
+
+# entry_point: a script that will run in a container. This script will include model description and training. 
+# role: a role that's obtained The role assigned to the running notebook. 
+# train_instance_count: number of container instances used to train the model.
+# train_instance_type: instance type!
+# framwork_version: version of Tensorflow
+# py_version: Python version.
+# script_mode: allows for running script in the container. 
+# hyperparameters: indicate the hyperparameters for the training job such as epochs and learning rate
+
+
+tf_estimator = TensorFlow(entry_point='train-cnn.py', 
+                          role=role,
+                          train_instance_count=1, 
+                          train_instance_type='ml.c5.xlarge',
+                          framework_version='1.12', 
+                          py_version='py3',
+                          script_mode=True,
+                          hyperparameters={
+                              'epochs': 2 ,
+                              'batch-size': 32,
+                              'learning-rate': 0.001}
+                         )
+
+```
+
+
+- Take the TensorFlow estimator, appl the fit method to it and feed it in or specify training path and validation path. 
+```bash
+tf_estimator.fit({'training': training_input_path, 'validation': validation_input_path})
+
+```
+
+- It will start the training job, will take some time and then it will give this kind of output:
+```bash
+2025-12-26 05:09:16 Starting - Starting the training job...
+2025-12-26 05:09:43 Starting - Preparing the instances for training...
+2025-12-26 05:10:20 Downloading - Downloading the training image..2025-12-26 05:10:29,652 sagemaker-containers INFO     Imported framework sagemaker_tensorflow_container.training
+2025-12-26 05:10:29,658 sagemaker-containers INFO     No GPUs detected (normal if no gpus installed)
+2025-12-26 05:10:29,898 sagemaker-containers INFO     No GPUs detected (normal if no gpus installed)
+2025-12-26 05:10:29,912 sagemaker-containers INFO     No GPUs detected (normal if no gpus installed)
+2025-12-26 05:10:29,922 sagemaker-containers INFO     Invoking user script
+Training Env:
+{
+    "additional_framework_parameters": {},
+    "channel_input_dirs": {
+        "training": "/opt/ml/input/data/training",
+        "validation": "/opt/ml/input/data/validation"
+    },
+    "current_host": "algo-1",
+    "framework_module": "sagemaker_tensorflow_container.training:main",
+    "hosts": [
+        "algo-1"
+    ],
+    "hyperparameters": {
+        "batch-size": 32,
+        "epochs": 2,
+        "learning-rate": 0.001,
+        "model_dir": "s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/model"
+    },
+    "input_config_dir": "/opt/ml/input/config",
+    "input_data_config": {
+        "training": {
+            "TrainingInputMode": "File",
+            "S3DistributionType": "FullyReplicated",
+            "RecordWrapperType": "None"
+        },
+        "validation": {
+            "TrainingInputMode": "File",
+            "S3DistributionType": "FullyReplicated",
+            "RecordWrapperType": "None"
+        }
+    },
+    "input_dir": "/opt/ml/input",
+    "is_master": true,
+    "job_name": "sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764",
+    "log_level": 20,
+    "master_hostname": "algo-1",
+    "model_dir": "/opt/ml/model",
+    "module_dir": "s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/source/sourcedir.tar.gz",
+    "module_name": "train-cnn",
+    "network_interface_name": "eth0",
+    "num_cpus": 4,
+    "num_gpus": 0,
+    "output_data_dir": "/opt/ml/output/data",
+    "output_dir": "/opt/ml/output",
+    "output_intermediate_dir": "/opt/ml/output/intermediate",
+    "resource_config": {
+        "current_host": "algo-1",
+        "current_instance_type": "ml.c5.xlarge",
+        "current_group_name": "homogeneousCluster",
+        "hosts": [
+            "algo-1"
+        ],
+        "instance_groups": [
+            {
+                "instance_group_name": "homogeneousCluster",
+                "instance_type": "ml.c5.xlarge",
+                "hosts": [
+                    "algo-1"
+                ]
+            }
+        ],
+        "network_interface_name": "eth0",
+        "topology": null
+    },
+    "user_entry_point": "train-cnn.py"
+}
+Environment variables:
+SM_HOSTS=["algo-1"]
+SM_NETWORK_INTERFACE_NAME=eth0
+SM_HPS={"batch-size":32,"epochs":2,"learning-rate":0.001,"model_dir":"s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/model"}
+SM_USER_ENTRY_POINT=train-cnn.py
+SM_FRAMEWORK_PARAMS={}
+SM_RESOURCE_CONFIG={"current_group_name":"homogeneousCluster","current_host":"algo-1","current_instance_type":"ml.c5.xlarge","hosts":["algo-1"],"instance_groups":[{"hosts":["algo-1"],"instance_group_name":"homogeneousCluster","instance_type":"ml.c5.xlarge"}],"network_interface_name":"eth0","topology":null}
+SM_INPUT_DATA_CONFIG={"training":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"},"validation":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"}}
+SM_OUTPUT_DATA_DIR=/opt/ml/output/data
+SM_CHANNELS=["training","validation"]
+SM_CURRENT_HOST=algo-1
+SM_MODULE_NAME=train-cnn
+SM_LOG_LEVEL=20
+SM_FRAMEWORK_MODULE=sagemaker_tensorflow_container.training:main
+SM_INPUT_DIR=/opt/ml/input
+SM_INPUT_CONFIG_DIR=/opt/ml/input/config
+SM_OUTPUT_DIR=/opt/ml/output
+SM_NUM_CPUS=4
+SM_NUM_GPUS=0
+SM_MODEL_DIR=/opt/ml/model
+SM_MODULE_DIR=s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/source/sourcedir.tar.gz
+SM_TRAINING_ENV={"additional_framework_parameters":{},"channel_input_dirs":{"training":"/opt/ml/input/data/training","validation":"/opt/ml/input/data/validation"},"current_host":"algo-1","framework_module":"sagemaker_tensorflow_container.training:main","hosts":["algo-1"],"hyperparameters":{"batch-size":32,"epochs":2,"learning-rate":0.001,"model_dir":"s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/model"},"input_config_dir":"/opt/ml/input/config","input_data_config":{"training":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"},"validation":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"}},"input_dir":"/opt/ml/input","is_master":true,"job_name":"sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764","log_level":20,"master_hostname":"algo-1","model_dir":"/opt/ml/model","module_dir":"s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/source/sourcedir.tar.gz","module_name":"train-cnn","network_interface_name":"eth0","num_cpus":4,"num_gpus":0,"output_data_dir":"/opt/ml/output/data","output_dir":"/opt/ml/output","output_intermediate_dir":"/opt/ml/output/intermediate","resource_config":{"current_group_name":"homogeneousCluster","current_host":"algo-1","current_instance_type":"ml.c5.xlarge","hosts":["algo-1"],"instance_groups":[{"hosts":["algo-1"],"instance_group_name":"homogeneousCluster","instance_type":"ml.c5.xlarge"}],"network_interface_name":"eth0","topology":null},"user_entry_point":"train-cnn.py"}
+SM_USER_ARGS=["--batch-size","32","--epochs","2","--learning-rate","0.001","--model_dir","s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/model"]
+SM_OUTPUT_INTERMEDIATE_DIR=/opt/ml/output/intermediate
+SM_CHANNEL_TRAINING=/opt/ml/input/data/training
+SM_CHANNEL_VALIDATION=/opt/ml/input/data/validation
+SM_HP_BATCH-SIZE=32
+SM_HP_EPOCHS=2
+SM_HP_LEARNING-RATE=0.001
+SM_HP_MODEL_DIR=s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/model
+PYTHONPATH=/opt/ml/code:/usr/local/bin:/usr/lib/python36.zip:/usr/lib/python3.6:/usr/lib/python3.6/lib-dynload:/usr/local/lib/python3.6/dist-packages:/usr/lib/python3/dist-packages
+Invoking script with the following command:
+/usr/bin/python train-cnn.py --batch-size 32 --epochs 2 --learning-rate 0.001 --model_dir s3://sagemaker-eu-north-1-595512633933/sagemaker-tensorflow-scriptmode-2025-12-26-05-09-15-764/model
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d (Conv2D)              (None, 28, 28, 6)         456       
+_________________________________________________________________
+average_pooling2d (AveragePo (None, 14, 14, 6)         0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 10, 10, 16)        2416      
+_________________________________________________________________
+average_pooling2d_1 (Average (None, 5, 5, 16)          0         
+_________________________________________________________________
+flatten (Flatten)            (None, 400)               0         
+_________________________________________________________________
+dense (Dense)                (None, 120)               48120     
+_________________________________________________________________
+dense_1 (Dense)              (None, 84)                10164     
+_________________________________________________________________
+dense_2 (Dense)              (None, 43)                3655      
+=================================================================
+Total params: 64,811
+Trainable params: 64,811
+Non-trainable params: 0
+_________________________________________________________________
+None
+Train on 34799 samples, validate on 12630 samples
+Epoch 1/2
+
+2025-12-26 05:10:25 Training - Training image download completed. Training in progress. - 12s - loss: 1.3942 - acc: 0.6125 - val_loss: 0.9386 - val_acc: 0.7523
+Epoch 2/2
+ - 11s - loss: 0.4131 - acc: 0.8796 - val_loss: 0.7712 - val_acc: 0.8184
+Validation loss    : 0.7711984559268302
+Validation accuracy: 0.8183689628247693
+WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow/python/saved_model/simple_save.py:85: calling SavedModelBuilder.add_meta_graph_and_variables (from tensorflow.python.saved_model.builder_impl) with legacy_init_op is deprecated and will be removed in a future version.
+Instructions for updating:
+Pass your op to the equivalent parameter main_op instead.
+2025-12-26 05:10:56,576 sagemaker-containers INFO     Reporting training SUCCESS
+
+2025-12-26 05:11:14 Uploading - Uploading generated training model
+2025-12-26 05:11:14 Completed - Training job completed
+Training seconds: 73
+Billable seconds: 73
+```
