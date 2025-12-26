@@ -46,6 +46,10 @@ Dataset consists of 43 classes:
 
 ```
 
+
+- Upload the required data: In SageMaker JupyterLab session, we'll need data to work with. That data is present in the repository in .zip format. Download all the files, keep them together in a folder and then extract       "traffic-sign-classification-data.zip". It will automatically consider other zipped folders and combine the data as it is .csv type.
+
+
 - Get the data & visualize it. Basically we will have all the data in: train.py (traning data), valid.py (validation data) & test.p (testing data). We'll open these files and the mode will be "Read Binary". </br>
   The pickle module in Machine Learning is primarily used for serializing (saving) trained models, data transformers, and intermediate results to a file, and then deserializing (loading) them back into memory for later       use, such as making new predictions or resuming a workflow. 
 ```bash
@@ -136,3 +140,7 @@ validation_input_path = sagemaker_session.upload_data('data/validation.npz', key
 print(training_input_path)
 print(validation_input_path)
 ```
+After the upload is complete, we can see the data in our local files as well as S3. </br>
+<img width="1788" height="453" alt="image" src="https://github.com/user-attachments/assets/fe553cf1-0bf5-492f-81dc-bf3e5cebe9f7" />
+
+
