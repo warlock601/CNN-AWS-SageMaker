@@ -501,3 +501,55 @@ Pass your op to the equivalent parameter main_op instead.
 Training seconds: 73
 Billable seconds: 73
 ```
+
+
+- Deploy the Model.
+```bash
+# Deploying the model
+
+import time
+
+tf_endpoint_name = 'trafficsignclassifier-' + time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime())
+
+tf_predictor = tf_estimator.deploy(initial_instance_count = 1,
+                         instance_type = 'ml.t2.medium',  
+                         endpoint_name = tf_endpoint_name)
+```
+
+- Making predictions for the endpoint.
+```bash
+# Making predictions from the end point
+
+
+%matplotlib inline
+import random
+import matplotlib.pyplot as plt
+
+#Pre-processing the images
+
+num_samples = 5
+indices = random.sample(range(X_test.shape[0] - 1), num_samples)
+images = X_test[indices]/255
+labels = y_test[indices]
+
+for i in range(num_samples):
+    plt.subplot(1,num_samples,i+1)
+    plt.imshow(images[i])
+    plt.title(labels[i])
+    plt.axis('off')
+
+# Making predictions 
+
+prediction = tf_predictor.predict(images.reshape(num_samples, 32, 32, 3))['predictions']
+prediction = np.array(prediction)
+predicted_label = prediction.argmax(axis=1)
+print('Predicted labels are: {}'.format(predicted_label))
+
+```
+
+- Deleting the endpoint.
+```bash
+# Deleting the end-point
+tf_predictor.delete_endpoint()
+
+```
