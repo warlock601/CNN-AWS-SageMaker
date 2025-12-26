@@ -105,3 +105,34 @@ prefix = 'traffic-sign-classifier' # prefix is the subfolder within the bucket.
 role = sagemaker.get_execution_role()
 print(role)
 ```
+
+
+
+- Upload the data to S3. First we will create a directory called "Data" and then we'll save the training and validation data in .npz format. Like training data will be stored as ./data/training.npz and validation data will be stored as ./data/validation.npz. Then upload the training and validation data to S3.
+```bash
+# Create directory to store the training and validation data
+
+import os
+os.makedirs("./data", exist_ok = True)
+
+```
+
+```bash
+# Save several arrays into a single file in uncompressed .npz format
+# Read more here: https://numpy.org/devdocs/reference/generated/numpy.savez.html
+
+np.savez('./data/training', image = X_train, label = y_train)
+np.savez('./data/validation', image = X_test, label = y_test)
+```
+
+```bash
+# Upload the training and validation data to S3 bucket
+
+prefix = 'traffic-sign'
+
+training_input_path   = sagemaker_session.upload_data('data/training.npz', key_prefix = prefix + '/training')
+validation_input_path = sagemaker_session.upload_data('data/validation.npz', key_prefix = prefix + '/validation')
+
+print(training_input_path)
+print(validation_input_path)
+```
